@@ -13,7 +13,7 @@ export default function PostItem({ post }: { post: Post }) {
   return (
     <div
       onClick={onClickItem}
-      className=" w-80 p-2 flex flex-col justify-center items-center rounded border-2 cursor-pointer"
+      className=" min-w-300 p-2 flex flex-col justify-center items-center rounded border-2 cursor-pointer"
     >
       <img src={urlFor(post.imageURL).url()} />
       {post.title}
