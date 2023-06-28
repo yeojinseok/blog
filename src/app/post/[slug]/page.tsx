@@ -1,11 +1,10 @@
 import PostDetail from "@/components/post/PostDetail";
-import { getPosts } from "@/service/post";
+import { getPostByID, getPosts } from "@/service/post";
 import { Suspense } from "react";
 
 type Props = {
   params: {
     slug: string;
-    title: string;
   };
 };
 
@@ -20,9 +19,10 @@ export default function PostDetailPage({ params }: Props) {
   );
 }
 
-export function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props) {
+  const post = await getPostByID(params.slug);
   return {
-    title: `${params.title}`,
+    title: `${post.title}`,
   };
 }
 
@@ -30,6 +30,5 @@ export async function generateStaticParams() {
   const posts = await getPosts();
   return posts.map((post) => ({
     slug: post._id,
-    title: post.title,
   }));
 }
