@@ -1,5 +1,7 @@
-import { getPostByID, getPosts } from "@/service/post";
+import { getPostByID } from "@/service/post";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+
+export const revalidate = 60 * 60 * 3;
 
 export default async function PostDetail({ postID }: { postID: string }) {
   const post = await getPostByID(postID);
