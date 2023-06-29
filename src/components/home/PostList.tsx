@@ -1,7 +1,7 @@
 import PostItem from "../post/PostItem";
 import { getPosts } from "@/service/post";
 
-export const revalidate = 60 * 60 * 3;
+export const revalidate = 60 * 60 * 24;
 
 export default async function PostList() {
   const posts = await getPosts();

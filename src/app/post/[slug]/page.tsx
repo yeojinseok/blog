@@ -2,7 +2,7 @@ import PostDetail from "@/components/post/PostDetail";
 import { getPostByID, getPosts } from "@/service/post";
 import { Suspense } from "react";
 
-export const revalidate = 60 * 60 * 3;
+export const revalidate = 60 * 60 * 24;
 
 type Props = {
   params: {
