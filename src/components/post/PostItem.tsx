@@ -32,7 +32,10 @@ export default function PostItem({ post }: { post: Post }) {
         <div>
           {post.categories?.length &&
             post.categories.map(category => (
-              <span className=" text-xs font-medium mr-1 p-1 rounded bg-blue-500 text-white">
+              <span
+                key={category}
+                className=" text-xs font-medium mr-1 p-1 rounded bg-blue-500 text-white"
+              >
                 {category}
               </span>
             ))}
@@ -41,7 +44,9 @@ export default function PostItem({ post }: { post: Post }) {
         <div>
           {post.tags &&
             post.tags?.map(tag => (
-              <span className="mr-1 text-sm text-gray-400">{tag}</span>
+              <span key={tag} className="mr-1 text-sm text-gray-400">
+                {tag}
+              </span>
             ))}
         </div>
         <span className=" text-xs">{Date.format(post._createdAt)}</span>
