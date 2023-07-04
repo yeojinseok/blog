@@ -12,12 +12,10 @@ export default function PostItem({ post }: { post: Post }) {
     router.push(`/post/${post._id}`)
   }
 
-  console.log(post)
-
   return (
     <div
       onClick={onClickItem}
-      className=" flex flex-col justify-center items-center rounded-2xl border-2 cursor-pointer  w-full overflow-hidden shadow-md"
+      className=" flex flex-col min-h-250 justify-center items-center rounded-2xl border-2 cursor-pointer  w-full overflow-hidden shadow-md"
       style={{
         aspectRatio: 4 / 3,
       }}
@@ -30,10 +28,10 @@ export default function PostItem({ post }: { post: Post }) {
           style={{ objectFit: 'cover' }}
         />
       </div>
-      <div className="w-full h-1/2 flex flex-col p-2 justify-between">
+      <div className="w-full h-1/2 flex flex-col p-2 justify-around">
         <div>
-          {post.category?.length &&
-            post.category.map(category => (
+          {post.categories?.length &&
+            post.categories.map(category => (
               <span className=" text-xs font-medium mr-1 p-1 rounded bg-blue-500 text-white">
                 {category}
               </span>
@@ -41,8 +39,8 @@ export default function PostItem({ post }: { post: Post }) {
         </div>
         <span className="text-xl font-medium">{post.title}</span>
         <div>
-          {post.tag &&
-            post.tag?.map(tag => (
+          {post.tags &&
+            post.tags?.map(tag => (
               <span className="mr-1 text-sm text-gray-400">{tag}</span>
             ))}
         </div>

@@ -10,8 +10,8 @@ export type Post = {
   imageURL: string
   views?: number
   likes?: number
-  tag?: string[]
-  category?: string[]
+  tags?: string[]
+  categories?: string[]
 }
 
 export async function getPosts(): Promise<Post[]> {
