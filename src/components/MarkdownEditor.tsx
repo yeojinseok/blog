@@ -81,3 +81,5 @@ const insertToTextArea = (intsertString: string) => {
 
   return sentence
 }
+
+//https://github.com/uiwjs/react-md-editor/issues/83
