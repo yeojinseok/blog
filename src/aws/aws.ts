@@ -1,21 +1,36 @@
-import AWS from 'aws-sdk'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import * as mime from 'mime-types'
 
-AWS.config.update({
-  region: 'ap-northeast-2', // 버킷이 존재하는 리전을 문자열로 입력합니다. (Ex. "ap-northeast-2")
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: 'us-east-2:09c0caef-e76d-44d6-add8-698a26348532', // cognito 인증 풀에서 받아온 키를 문자열로 입력합니다. (Ex. "ap-northeast-2...")
-  }),
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_ACCESSKEY as string,
+    secretAccessKey: process.env.NEXT_PUBLIC_SECRETACCESSKEY as string,
+  },
+  region: 'ap-northeast-2',
 })
 
-export const uploadImage = (imageFile: File) => {
-  const upload = new AWS.S3.ManagedUpload({
-    params: {
-      Bucket: 'jindolog-images',
-      Key: imageFile.name,
-      Body: imageFile,
-    },
-  })
-  const promise = upload.promise()
+// export const uploadImage = (imageFile: File) => {
+//   const upload = new AWS.S3.ManagedUpload({
+//     params: {
+//       Bucket: 'jindolog-images',
+//       Key: imageFile.name,
+//       Body: imageFile,
+//     },
+//   })
+//   const promise = upload.promise()
 
-  promise.then()
+//   promise.then()
+// }
+
+export async function uploadFile(file: File) {
+  console.log(process.env.NEXT_PUBLIC_SECRETACCESSKEY, '??')
+  const uploadParams = {
+    Bucket: 'jindolog-images',
+    Key: file.name,
+    Body: file,
+    ContentType: mime.lookup(file.type) as string,
+  }
+
+  const res = await s3.send(new PutObjectCommand(uploadParams))
+  return res.$metadata.httpStatusCode
 }
