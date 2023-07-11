@@ -2,6 +2,7 @@
 import React, { SetStateAction } from 'react'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
+import { uploadFile } from '@/aws/aws'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then(mod => mod.default),
@@ -49,8 +50,9 @@ const onImagePasted = async (
 
   await Promise.all(
     files.map(async file => {
-      // const url = await fileUpload(file)
-      const url = '' //FIXME: URL 업로드하는 로직 구성해야함.
+      console.log(file)
+      const url = await uploadFile(file)
+      // const url = '' //FIXME: URL 업로드하는 로직 구성해야함.
       const insertedMarkdown = insertToTextArea(`![](${url})`)
       if (!insertedMarkdown) {
         return
