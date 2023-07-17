@@ -1,7 +1,8 @@
-import { createClient } from "next-sanity";
+import { createClient } from 'next-sanity'
 
 export const client = createClient({
-  projectId: "iim5qsfe",
-  dataset: "production",
+  projectId: process.env.NEXT_PUBLIC_SANITY_ID,
+  dataset: 'production',
   useCdn: false,
-});
+  token: process.env.NEXT_PUBLIC_SANITY_API_TOKEN,
+})

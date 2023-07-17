@@ -23,3 +23,7 @@ export async function getPostByID(postID: string): Promise<Post> {
     .fetch(`*[_type == "post" && _id == "${postID}"]`)
     .then(v => v[0])
 }
+
+export async function createPost(body: Partial<Post>) {
+  return axios.post('/api/post', { ...body }).then(v => console.log(v.data))
+}

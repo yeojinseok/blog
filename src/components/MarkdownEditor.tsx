@@ -2,7 +2,9 @@
 import React, { SetStateAction } from 'react'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
-import { uploadFile } from '@/aws/aws'
+import { uploadFile } from '@/module/aws/fileUpload'
+import axios from 'axios'
+import { createPost } from '@/service/post'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then(mod => mod.default),
@@ -10,27 +12,38 @@ const MDEditor = dynamic(
 )
 
 export default function MarkdownEditor() {
-  const [markdown, setMarkdown] = useState<string | undefined>('asdf')
+  const [markdown, setMarkdown] = useState<string | undefined>('')
 
   return (
-    <div>
+    <div className=" pt-10">
       <MDEditor
-        value={markdown}
-        onChange={value => {
-          setMarkdown(value)
+        style={{
+          border: '1px solid',
         }}
+        value={markdown}
+        onChange={setMarkdown}
         onPaste={async event => {
           await onImagePasted(event.clipboardData, setMarkdown)
         }}
         onDrop={async event => {
+          event.preventDefault()
           await onImagePasted(event.dataTransfer, setMarkdown)
         }}
-        height={440}
         textareaProps={{
           placeholder: 'Fill in your markdown for the coolest of the cool.',
         }}
         hideToolbar
       />
+      <button
+        onClick={() => {
+          createPost({
+            title: 'testtitle',
+            content: markdown,
+          })
+        }}
+      >
+        create
+      </button>
     </div>
   )
 }
@@ -50,9 +63,7 @@ const onImagePasted = async (
 
   await Promise.all(
     files.map(async file => {
-      console.log(file)
       const url = await uploadFile(file)
-      // const url = '' //FIXME: URL 업로드하는 로직 구성해야함.
       const insertedMarkdown = insertToTextArea(`![](${url})`)
       if (!insertedMarkdown) {
         return
@@ -62,7 +73,7 @@ const onImagePasted = async (
   )
 }
 
-const insertToTextArea = (intsertString: string) => {
+const insertToTextArea = (insertString: string) => {
   const textarea = document.querySelector('textarea')
   if (!textarea) {
     return null
@@ -76,10 +87,10 @@ const insertToTextArea = (intsertString: string) => {
   const front = sentence.slice(0, pos)
   const back = sentence.slice(pos, len)
 
-  sentence = front + intsertString + back
+  sentence = front + insertString + back
 
   textarea.value = sentence
-  textarea.selectionEnd = end + intsertString.length
+  textarea.selectionEnd = end + insertString.length
 
   return sentence
 }
