@@ -11,6 +11,7 @@ export type Post = {
   views?: number
   likes?: number
   tags?: string[]
+  postID: string
   categories?: string[]
 }
 
@@ -25,5 +26,5 @@ export async function getPostByID(postID: string): Promise<Post> {
 }
 
 export async function createPost(body: Partial<Post>) {
-  return axios.post('/api/post', { ...body }).then(v => console.log(v.data))
+  return axios.post('/api/post', { ...body })
 }

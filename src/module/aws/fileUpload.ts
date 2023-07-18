@@ -1,13 +1,13 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { S3 } from './s3'
+import { S3Client } from './s3'
 import axios from 'axios'
 
-const FILE_PATH = 'post/images'
+export const FILE_PATH = 'post/images'
 
-export async function uploadFile(file: File) {
+export async function uploadFile(file: File, postID: string) {
   try {
-    const presignedURL = await getPresignedURL(file)
+    const presignedURL = await getPresignedURL(file, postID)
 
     await axios.put(presignedURL, file, {
       headers: {
@@ -21,26 +21,21 @@ export async function uploadFile(file: File) {
   }
 }
 
-export async function getPresignedURL(file: File) {
+export async function getPresignedURL(file: File, postID: string) {
   const command = new PutObjectCommand({
     Bucket: 'jindolog-images',
-    Key: getFilePath(file.name),
+    Key: `${FILE_PATH}/${postID}/${file.name}`,
     ContentType: file.type,
   })
 
   try {
-    const presignedUrl = await getSignedUrl(S3, command, {
+    const presignedUrl = await getSignedUrl(S3Client, command, {
       expiresIn: 3600,
     })
-    console.log(`Presigned URL: ${presignedUrl}`)
 
     return presignedUrl
   } catch (err) {
     console.log('Error', err)
     throw new Error('Failed to create presigned URL')
   }
-}
-
-function getFilePath(fileName: string) {
-  return `${FILE_PATH}/${fileName}.png` //확인필요
 }

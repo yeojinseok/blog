@@ -3,8 +3,8 @@ import React, { SetStateAction } from 'react'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { uploadFile } from '@/module/aws/fileUpload'
-import axios from 'axios'
 import { createPost } from '@/service/post'
+import { nanoid } from 'nanoid'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then(mod => mod.default),
@@ -12,22 +12,49 @@ const MDEditor = dynamic(
 )
 
 export default function MarkdownEditor() {
-  const [markdown, setMarkdown] = useState<string | undefined>('')
+  const [postValue, setPostValue] = useState<{
+    title: string
+    content: string | undefined
+    postID: string
+  }>({
+    title: 'test',
+    content: '',
+    postID: nanoid(),
+  })
+
+  const onChangeContentHandler = (value: string | undefined) => {
+    setPostValue(prev => ({ ...prev, content: value }))
+  }
+
+  const onChangeTitleHandler = (value: string) => {
+    setPostValue(prev => ({ ...prev, title: value }))
+  }
 
   return (
-    <div className=" pt-10">
+    <div className="pt-10">
       <MDEditor
         style={{
           border: '1px solid',
         }}
-        value={markdown}
-        onChange={setMarkdown}
+        value={postValue.content}
+        onChange={onChangeContentHandler}
         onPaste={async event => {
-          await onImagePasted(event.clipboardData, setMarkdown)
+          if (event.clipboardData.files.length > 0) {
+            event.preventDefault()
+            await onImagePasted(
+              event.clipboardData,
+              onChangeContentHandler,
+              postValue.postID
+            )
+          }
         }}
         onDrop={async event => {
           event.preventDefault()
-          await onImagePasted(event.dataTransfer, setMarkdown)
+          await onImagePasted(
+            event.dataTransfer,
+            onChangeContentHandler,
+            postValue.postID
+          )
         }}
         textareaProps={{
           placeholder: 'Fill in your markdown for the coolest of the cool.',
@@ -36,10 +63,7 @@ export default function MarkdownEditor() {
       />
       <button
         onClick={() => {
-          createPost({
-            title: 'testtitle',
-            content: markdown,
-          })
+          createPost({ ...postValue })
         }}
       >
         create
@@ -50,7 +74,8 @@ export default function MarkdownEditor() {
 
 const onImagePasted = async (
   dataTransfer: DataTransfer,
-  setMarkdown: (value: SetStateAction<string | undefined>) => void
+  setMarkdown: (value: string | undefined) => void,
+  postID: string
 ) => {
   const files: File[] = []
   for (let index = 0; index < dataTransfer.items.length; index += 1) {
@@ -63,7 +88,7 @@ const onImagePasted = async (
 
   await Promise.all(
     files.map(async file => {
-      const url = await uploadFile(file)
+      const url = await uploadFile(file, postID)
       const insertedMarkdown = insertToTextArea(`![](${url})`)
       if (!insertedMarkdown) {
         return
