@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['cdn.sanity.io'],
+    domains: [
+      'cdn.sanity.io',
+      'jindolog-images.s3.ap-northeast-2.amazonaws.com',
+    ],
   },
 }
 
