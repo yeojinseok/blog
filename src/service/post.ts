@@ -7,7 +7,7 @@ export type Post = {
   _updatedAt: string
   content: string
   _createdAt: string
-  imageURL: string
+  thumbnailURL: string
   views?: number
   likes?: number
   tags?: string[]

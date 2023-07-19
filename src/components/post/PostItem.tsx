@@ -1,5 +1,4 @@
 'use client'
-import { urlFor } from '@/sanity/imageBuilder'
 import { Post } from '@/service/post'
 import { Date } from '@/utils/date'
 import Image from 'next/image'
@@ -22,7 +21,7 @@ export default function PostItem({ post }: { post: Post }) {
     >
       <div className=" w-full h-1/2 rounded-2xl relative">
         <Image
-          src={urlFor(post.imageURL).url()}
+          src={post.thumbnailURL}
           alt="image"
           fill
           style={{ objectFit: 'cover' }}
