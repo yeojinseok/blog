@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { uploadFile } from '@/module/aws/fileUpload'
 import { createPost } from '@/service/post'
 import { nanoid } from 'nanoid'
+import { useRouter } from 'next/navigation'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then(mod => mod.default),
@@ -12,6 +13,8 @@ const MDEditor = dynamic(
 )
 
 export default function MarkdownEditor() {
+  const router = useRouter()
+
   const [postValue, setPostValue] = useState<{
     title: string
     content: string | undefined
@@ -34,6 +37,13 @@ export default function MarkdownEditor() {
     HTMLTextAreaElement
   > = event => {
     setPostValue(prev => ({ ...prev, title: event.target.value }))
+  }
+
+  const onClickPost = async () => {
+    try {
+      await createPost({ ...postValue })
+      router.replace('/')
+    } catch (err) {}
   }
 
   useEffect(() => {
@@ -59,23 +69,26 @@ export default function MarkdownEditor() {
   }, []) // 빈 dependency 배열로 한 번만 실행
 
   return (
-    <div className="h-full">
-      <textarea
-        onChange={onChangeTitleHandler}
-        rows={1}
-        className=" text-4xl w-full focus:outline-none my-2"
-        placeholder="제목을 입력하세요"
-        style={{ resize: 'none', border: 0 }}
-        onFocus={event => event.preventDefault()}
-      />
-      <button
-        onClick={() => {
-          createPost({ ...postValue })
-        }}
-      >
-        create
-      </button>
-      <div ref={editorContainerRef} className=" h-full">
+    <div className="h-full  ">
+      <div className="flex">
+        <textarea
+          onChange={onChangeTitleHandler}
+          rows={1}
+          className=" text-4xl w-full focus:outline-none my-2"
+          placeholder="제목을 입력하세요"
+          style={{ resize: 'none', border: 0 }}
+          onFocus={event => event.preventDefault()}
+        />
+        <div className="flex items-center">
+          <button
+            className=" w-20 h-10 border rounded-md bg-blue-400 text-white font-semibold"
+            onClick={onClickPost}
+          >
+            출간하기
+          </button>
+        </div>
+      </div>
+      <div ref={editorContainerRef} style={{ height: '90%' }}>
         <MDEditor
           value={postValue.content}
           height={height}
