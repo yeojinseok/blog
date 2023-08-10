@@ -1,28 +1,33 @@
 'use client'
-import React, { SetStateAction, Suspense, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { uploadFile } from '@/module/aws/fileUpload'
 import { createPost } from '@/service/post'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then(mod => mod.default),
   { ssr: false }
 )
 
+type CreatePostType = {
+  title: string
+  content: string | undefined
+  postID: string
+  tags: string[]
+}
+
 export default function MarkdownEditor() {
   const router = useRouter()
 
-  const [postValue, setPostValue] = useState<{
-    title: string
-    content: string | undefined
-    postID: string
-  }>({
+  const [postValue, setPostValue] = useState<CreatePostType>({
     title: 'test',
     content: '',
     postID: nanoid(),
+    tags: [],
   })
 
   const [height, setHeight] = useState(0)
@@ -88,6 +93,7 @@ export default function MarkdownEditor() {
           </button>
         </div>
       </div>
+      <TagSection tags={postValue.tags} setPostValue={setPostValue} />
       <div ref={editorContainerRef} style={{ height: '90%' }}>
         <MDEditor
           value={postValue.content}
@@ -172,3 +178,47 @@ const insertToTextArea = (insertString: string) => {
 }
 
 //https://github.com/uiwjs/react-md-editor/issues/83
+
+function TagSection({
+  tags,
+  setPostValue,
+}: {
+  tags: string[]
+  setPostValue: React.Dispatch<React.SetStateAction<CreatePostType>>
+}) {
+  const [tag, setTag] = useState('')
+
+  useHotkeys(
+    'enter',
+    () => {
+      if (tag === '') {
+        return
+      }
+      setPostValue(prev => ({
+        ...prev,
+        tags: [...prev.tags, tag],
+      }))
+
+      setTag('')
+    },
+    {
+      enableOnFormTags: true,
+    }
+  )
+
+  return (
+    <div className="flex flex-row flex-wrap w-1/2 gap-2">
+      {tags.map(tag => (
+        <div className=" bg-blue-400 text-white p-1 rounded-md" key={tag}>
+          {tag}
+        </div>
+      ))}
+      <input
+        type="text"
+        placeholder="태그를 입력하세요"
+        value={tag}
+        onChange={v => setTag(v.target.value)}
+      />
+    </div>
+  )
+}

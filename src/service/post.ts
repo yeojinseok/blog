@@ -1,19 +1,6 @@
 import { client } from '@/sanity/sanityClient'
+import { Post } from '@/types/post'
 import axios from 'axios'
-
-export type Post = {
-  _id: string
-  title: string
-  _updatedAt: string
-  content: string
-  _createdAt: string
-  thumbnailURL: string
-  views?: number
-  likes?: number
-  tags?: string[]
-  postID: string
-  categories?: string[]
-}
 
 export async function getPosts(): Promise<Post[]> {
   return client.fetch(`*[_type == "post"]`)

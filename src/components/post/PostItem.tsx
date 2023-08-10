@@ -1,5 +1,5 @@
 'use client'
-import { Post } from '@/service/post'
+import { Post } from '@/types/post'
 import { Date } from '@/utils/date'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
