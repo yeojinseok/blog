@@ -1,5 +1,5 @@
 import { FILE_PATH } from '@/module/aws/fileUpload'
-import { S3Client, S3Object } from '@/module/aws/s3'
+import { S3Object } from '@/module/aws/s3'
 import { client } from '@/sanity/sanityClient'
 import { NextResponse } from 'next/server'
 
@@ -11,13 +11,25 @@ export async function POST(request: Request) {
     Prefix: `${FILE_PATH}/${res.postID}`,
   }).promise()
 
-  const thumbnailURL = `https://jindolog-images.s3.ap-northeast-2.amazonaws.com/${s3Data.Contents?.[0].Key}`
+  const thumbnailURL =
+    s3Data.Contents?.[0] != null
+      ? `https://jindolog-images.s3.ap-northeast-2.amazonaws.com/${s3Data.Contents?.[0].Key}`
+      : '/profile.JPG'
 
   const postData = {
     _type: 'post',
     ...res,
+
     thumbnailURL,
   }
+
+  res.tags.forEach((tag: string) => {
+    const tagData = {
+      _type: 'tag',
+      name: tag,
+    }
+    client.create(tagData)
+  })
 
   const response = await client.create(postData)
   return NextResponse.json({ response })
