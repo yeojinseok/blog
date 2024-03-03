@@ -1,23 +1,22 @@
 'use client'
 
 import Link from 'next/link'
+import { HStack } from '../design-system/Stack'
+import Typography from '../design-system/Typography'
 
 export default function Header() {
   return (
-    <div className="w-screen  items-center flex h-12 px-4 border-b-2 border-gray-200  justify-center">
-      <div className="flex max-w-1520 w-full justify-between">
-        <Logo />
-      </div>
-    </div>
+    <HStack className="items-center w-screen px-16 py-8 ">
+      <Logo />
+    </HStack>
   )
 }
 
 function Logo() {
   return (
     <Link href={'/'}>
-      <div className="item-center text-lg text-center font-bold text-blue-500 flex">
-        JINDOLOG
-      </div>
+      <div className="flex text-lg font-bold text-center text-blue-500 item-center"></div>
+      <Typography variants=".title_screen">JINDOLOG</Typography>
     </Link>
   )
 }

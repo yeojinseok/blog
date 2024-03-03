@@ -1,6 +1,8 @@
 import Header from '@/components/layout/\bHeader'
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { VStack } from '@/components/design-system/Stack'
+import Divider from '@/components/design-system/Divider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,16 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-w-375 max-w-full  h-screen overflow-hidden">
+        <div className="h-screen max-w-full overflow-hidden min-w-375 ">
           <Header />
-          <div className=" w-full h-full px-10 ">
-            <div
-              className="w-full  h-full max-w-1520 "
-              style={{ margin: '0 auto' }}
-            >
-              {children}
-            </div>
-          </div>
+          <Divider />
+          <VStack className="h-full p-16">{children}</VStack>
         </div>
       </body>
     </html>
