@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 export default function Profile() {
   return (
-    <div className="h-70 flex flex-col items-center justify-center gap-5">
+    <div className="flex flex-col justify-center ">
       <Image
         className="rounded-full"
         width={150}
@@ -10,7 +10,7 @@ export default function Profile() {
         alt="profile image"
         src={'/profile.JPG'}
       />
-      <div className=" font-medium  text-lg">안녕~ 내이름은 여진석</div>
+      <div className="text-lg font-medium ">안녕~ 내이름은 여진석</div>
     </div>
   )
 }
