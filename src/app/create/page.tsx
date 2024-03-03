@@ -8,7 +8,7 @@ const MarkdownEditor = dynamic(
 
 export default async function CreatePost() {
   return (
-    <div className=" w-full h-full">
+    <div className="w-full h-full ">
       <MarkdownEditor />
     </div>
   )

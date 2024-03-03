@@ -23,33 +23,33 @@ type CreatePostType = {
 export default function MarkdownEditor() {
   const router = useRouter()
 
-  const [postValue, setPostValue] = useState<CreatePostType>({
-    title: 'test',
-    content: '',
-    postID: nanoid(),
-    tags: [],
-  })
+  // const [postValue, setPostValue] = useState<CreatePostType>({
+  //   title: 'test',
+  //   content: '',
+  //   postID: nanoid(),
+  //   tags: [],
+  // })
 
   const [height, setHeight] = useState(0)
 
   const editorContainerRef = useRef<HTMLDivElement>(null)
 
-  const onChangeContentHandler = (value: string | undefined) => {
-    setPostValue(prev => ({ ...prev, content: value }))
-  }
+  // const onChangeContentHandler = (value: string | undefined) => {
+  //   setPostValue(prev => ({ ...prev, content: value }))
+  // }
 
-  const onChangeTitleHandler: React.ChangeEventHandler<
-    HTMLTextAreaElement
-  > = event => {
-    setPostValue(prev => ({ ...prev, title: event.target.value }))
-  }
+  // const onChangeTitleHandler: React.ChangeEventHandler<
+  //   HTMLTextAreaElement
+  // > = event => {
+  //   setPostValue(prev => ({ ...prev, title: event.target.value }))
+  // }
 
-  const onClickPost = async () => {
-    try {
-      await createPost({ ...postValue })
-      router.replace('/')
-    } catch (err) {}
-  }
+  // const onClickPost = async () => {
+  //   try {
+  //     await createPost({ ...postValue })
+  //     router.replace('/')
+  //   } catch (err) {}
+  // }
 
   useEffect(() => {
     // ResizeObserver 인스턴스 생성
@@ -74,49 +74,52 @@ export default function MarkdownEditor() {
   }, []) // 빈 dependency 배열로 한 번만 실행
 
   return (
-    <div className="h-full  ">
+    <div className="h-full ">
       <div className="flex">
         <textarea
-          onChange={onChangeTitleHandler}
+          // onChange={onChangeTitleHandler}
           rows={1}
-          className=" text-4xl w-full focus:outline-none my-2"
+          className="w-full my-2 text-4xl focus:outline-none"
           placeholder="제목을 입력하세요"
           style={{ resize: 'none', border: 0 }}
           onFocus={event => event.preventDefault()}
         />
         <div className="flex items-center">
           <button
-            className=" w-20 h-10 border rounded-md bg-blue-400 text-white font-semibold"
-            onClick={onClickPost}
+            className="w-20 h-10 font-semibold text-white bg-blue-400 border rounded-md "
+            // onClick={onClickPost}
           >
             출간하기
           </button>
         </div>
       </div>
-      <TagSection tags={postValue.tags} setPostValue={setPostValue} />
-      <div ref={editorContainerRef} style={{ height: '90%' }}>
+      {/* <TagSection tags={postValue.tags} setPostValue={setPostValue} /> */}
+      <div
+        ref={editorContainerRef}
+        style={{ height: '100%', backgroundColor: 'red' }}
+      >
         <MDEditor
-          value={postValue.content}
+          // value={postValue.content}
           height={height}
-          onChange={onChangeContentHandler}
-          onPaste={async event => {
-            if (event.clipboardData.files.length > 0) {
-              event.preventDefault()
-              await onImagePasted(
-                event.clipboardData,
-                onChangeContentHandler,
-                postValue.postID
-              )
-            }
-          }}
-          onDrop={async event => {
-            event.preventDefault()
-            await onImagePasted(
-              event.dataTransfer,
-              onChangeContentHandler,
-              postValue.postID
-            )
-          }}
+          // onChange={onChangeContentHandler}
+          // onPaste={async event => {
+          //   if (event.clipboardData.files.length > 0) {
+          //     event.preventDefault()
+          //     await onImagePasted(
+          //       event.clipboardData,
+          //       onChangeContentHandler,
+          //       postValue.postID
+          //     )
+          //   }
+          // }}
+          // onDrop={async event => {
+          //   event.preventDefault()
+          //   await onImagePasted(
+          //     event.dataTransfer,
+          //     onChangeContentHandler,
+          //     postValue.postID
+          //   )
+          // }}
           textareaProps={{
             placeholder: 'Fill in your markdown for the coolest of the cool.',
           }}
@@ -209,7 +212,7 @@ function TagSection({
   return (
     <div className="flex flex-row flex-wrap w-1/2 gap-2">
       {tags.map(tag => (
-        <div className=" bg-blue-400 text-white p-1 rounded-md" key={tag}>
+        <div className="p-1 text-white bg-blue-400 rounded-md " key={tag}>
           {tag}
         </div>
       ))}
