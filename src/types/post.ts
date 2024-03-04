@@ -11,3 +11,5 @@ export type Post = {
   postID: string
   categories?: string[]
 }
+
+export type CreatePostType = Omit<Post, '_id' | '_updatedAt' | '_createdAt'>

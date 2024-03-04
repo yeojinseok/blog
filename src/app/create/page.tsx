@@ -1,15 +1,10 @@
-import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
+import MarkdownEditor from '@/components/MarkdownEditor'
+import PostEditor from '@/components/post/PostEditor'
 
-const MarkdownEditor = dynamic(
-  () => import('@/components/MarkdownEditor').then(mod => mod.default),
-  { ssr: false, loading: () => <div>loading</div> }
-)
-
-export default async function CreatePost() {
+export default async function CreatePostPage() {
   return (
     <div className="w-full h-full ">
-      <MarkdownEditor />
+      <PostEditor />
     </div>
   )
 }

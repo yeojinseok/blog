@@ -7,6 +7,7 @@ import { createPost } from '@/service/post'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { MDEditorProps } from '@uiw/react-md-editor'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then(mod => mod.default),
@@ -20,112 +21,63 @@ type CreatePostType = {
   tags: string[]
 }
 
-export default function MarkdownEditor() {
-  const router = useRouter()
-
-  // const [postValue, setPostValue] = useState<CreatePostType>({
-  //   title: 'test',
-  //   content: '',
-  //   postID: nanoid(),
-  //   tags: [],
-  // })
-
+export default function MarkdownEditor(
+  props: MDEditorProps & { postID?: string }
+) {
   const [height, setHeight] = useState(0)
 
   const editorContainerRef = useRef<HTMLDivElement>(null)
+  const postIDRef = React.useRef(props.postID ?? nanoid())
 
-  // const onChangeContentHandler = (value: string | undefined) => {
-  //   setPostValue(prev => ({ ...prev, content: value }))
-  // }
-
-  // const onChangeTitleHandler: React.ChangeEventHandler<
-  //   HTMLTextAreaElement
-  // > = event => {
-  //   setPostValue(prev => ({ ...prev, title: event.target.value }))
-  // }
-
-  // const onClickPost = async () => {
-  //   try {
-  //     await createPost({ ...postValue })
-  //     router.replace('/')
-  //   } catch (err) {}
-  // }
+  const onChangeContentHandler = (value: string | undefined) => {
+    props.onChange?.(value)
+  }
 
   useEffect(() => {
-    // ResizeObserver 인스턴스 생성
     const observer = new ResizeObserver(entries => {
-      // entries는 모든 관찰 대상의 배열
-      // 여기서는 divRef만 관찰하므로 entries[0]만 존재
-      setHeight(entries[0].contentRect.height - 100)
+      setHeight(entries[0].contentRect.height)
     })
 
     if (editorContainerRef.current) {
-      // divRef가 변화를 감지하도록 observer에 추가
       observer.observe(editorContainerRef.current)
     }
 
-    // cleanup 함수
     return () => {
       if (editorContainerRef.current) {
-        // 컴포넌트 unmount시 observer에서 divRef 제거
         observer.unobserve(editorContainerRef.current)
       }
     }
-  }, []) // 빈 dependency 배열로 한 번만 실행
+  }, [])
 
   return (
-    <div className="h-full ">
-      <div className="flex">
-        <textarea
-          // onChange={onChangeTitleHandler}
-          rows={1}
-          className="w-full my-2 text-4xl focus:outline-none"
-          placeholder="제목을 입력하세요"
-          style={{ resize: 'none', border: 0 }}
-          onFocus={event => event.preventDefault()}
-        />
-        <div className="flex items-center">
-          <button
-            className="w-20 h-10 font-semibold text-white bg-blue-400 border rounded-md "
-            // onClick={onClickPost}
-          >
-            출간하기
-          </button>
-        </div>
-      </div>
-      {/* <TagSection tags={postValue.tags} setPostValue={setPostValue} /> */}
-      <div
-        ref={editorContainerRef}
-        style={{ height: '100%', backgroundColor: 'red' }}
-      >
-        <MDEditor
-          // value={postValue.content}
-          height={height}
-          // onChange={onChangeContentHandler}
-          // onPaste={async event => {
-          //   if (event.clipboardData.files.length > 0) {
-          //     event.preventDefault()
-          //     await onImagePasted(
-          //       event.clipboardData,
-          //       onChangeContentHandler,
-          //       postValue.postID
-          //     )
-          //   }
-          // }}
-          // onDrop={async event => {
-          //   event.preventDefault()
-          //   await onImagePasted(
-          //     event.dataTransfer,
-          //     onChangeContentHandler,
-          //     postValue.postID
-          //   )
-          // }}
-          textareaProps={{
-            placeholder: 'Fill in your markdown for the coolest of the cool.',
-          }}
-          hideToolbar
-        />
-      </div>
+    <div ref={editorContainerRef} className="h-full p-16 pb-100">
+      <MDEditor
+        {...props}
+        height={height}
+        onChange={onChangeContentHandler}
+        onPaste={async event => {
+          if (event.clipboardData.files.length > 0) {
+            event.preventDefault()
+            await onImagePasted(
+              event.clipboardData,
+              onChangeContentHandler,
+              postIDRef.current
+            )
+          }
+        }}
+        onDrop={async event => {
+          event.preventDefault()
+          await onImagePasted(
+            event.dataTransfer,
+            onChangeContentHandler,
+            postIDRef.current
+          )
+        }}
+        textareaProps={{
+          placeholder: 'Fill in your markdown for the coolest of the cool.',
+        }}
+        hideToolbar
+      />
     </div>
   )
 }
