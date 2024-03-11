@@ -1,8 +1,26 @@
 @tailwind base;
+h1 {
+  @apply title_screen;
+}
+h2 {
+  @apply title_section;
+}
+
+h3 {
+  @apply title_subsection;
+}
+
+h4 {
+  @apply title_body;
+}
+
+h5 {
+  @apply title_group;
+}
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
+:root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -24,4 +42,4 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-} */
+}

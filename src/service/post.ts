@@ -3,7 +3,7 @@ import { Post } from '@/types/post'
 import axios from 'axios'
 
 export async function getPosts(): Promise<Post[]> {
-  return client.fetch(`*[_type == "post"]`)
+  return client.fetch(`*[_type == "post"] | order(_createdAt desc)`)
 }
 
 export async function getPostByID(postID: string): Promise<Post> {
