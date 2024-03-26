@@ -57,8 +57,8 @@ module.exports = {
         secondary: '#9b9b9b',
       },
       bgColor: {
-        main: '#171717',
-        secondary: '#212121',
+        main: '#ffffff',
+        secondary: '#ffffff',
       },
 
       grey: {

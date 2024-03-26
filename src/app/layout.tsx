@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="h-screen max-w-full overflow-hidden min-w-375 ">
+        <div className="h-screen max-w-full overflow-hidden min-w-375 bg-bgColor-main">
           <Header />
           <Divider />
           <VStack className="h-full p-16">{children}</VStack>
